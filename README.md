@@ -1,30 +1,27 @@
-# CovidMonitor
-Projeto Final UFSC - Desenvolvedor WEB
-
-# Aplicação Web: COVID-19
+# CovidMonitor : Aplicação Web: COVID-19
 
 Vamos chamar de COVID-19 uma aplicação real onde pesquisadores da UFSC poderão obter informações sobre o estado da doença COVID-19 em Florianópolis.
 O objetivo aqui é armazenar dados disponibilizados pela Secretaria de Saúde de Florianópolis. Os dados serão armazenados em um banco de dados.
 
 As informações que queremos armazenar estão relacionadas as pessoas que realizaram testes para COVID-19. As informações são:
 
-a data da notificação;
-a data dos primeiros sintomas;
-a data do teste;
-a data do óbito (se for o caso);
-a data de nascimento;
-a faixa etária;
-o sexo (M, F, N - Não deseja informar);
-a cor (AMARELA, BRANCA, PARDA ou PRETA);
-o bairro onde mora;
-a cidade onde mora;
-o Centro de Saúde;
-o tipo do teste realizado;
-dor de garganta (SIM, NÃO);
-dispneia (SIM, NÃO);
-febre (SIM, NÃO);
-tosse (SIM, NÃO); e
-internado na UTI (SIM, NÃO).
+- a data da notificação;
+- a data dos primeiros sintomas;
+- a data do teste;
+- a data do óbito (se for o caso);
+- a data de nascimento;
+- a faixa etária;
+- o sexo (M, F, N - Não deseja informar);
+- a cor (AMARELA, BRANCA, PARDA ou PRETA);
+- o bairro onde mora;
+- a cidade onde mora;
+- o Centro de Saúde;
+- o tipo do teste realizado;
+- dor de garganta (SIM, NÃO);
+- dispneia (SIM, NÃO);
+- febre (SIM, NÃO);
+- tosse (SIM, NÃO); e
+- internado na UTI (SIM, NÃO).
 
 
 
