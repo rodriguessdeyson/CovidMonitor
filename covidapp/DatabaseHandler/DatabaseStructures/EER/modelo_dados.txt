@@ -1,0 +1,78 @@
+Tabelas a serem criadas para o programa covid:
+
+Unidade Federativa
+	Id	Nome	
+	1 	Santa
+	2 	Rio Grande do Sul
+Município
+	Id	Unidade Federativa Id	Nome
+	1	1			Florianópolis
+	2	1			São José
+Bairros
+	Id	MunicípioId	Nome
+	1	1		Trindade
+	2	1		Capoeiras
+	3	1		Ingleses
+	4	2		Barreiros
+	5	1		Monte Cristo
+
+Centros de Saúdes
+	Id	Nome
+	1	CS Ingleses
+	2	CS Capoeiras
+	3	CS Coqueiros
+
+CentrosDeSaúde_Bairros_Ids
+	Id	Centros_De_SaúdeId	BairrosId
+	1	1			3
+	2	2			2
+	3	2			5
+
+Tipos de testes
+	Id	Type
+	1	RT-PCR
+	2	ANTICORPOS
+	3	ANTÍGENO
+	4	Não_Informado
+
+Sexo
+	Id	Sexo
+	1	M
+	2	F
+
+Raça
+	Id	Raça
+	1	Preta
+	2	Branca
+	3	Parda
+	4	Amarela
+
+Faixa Etária
+	Id	Faixa
+	1	Até 9 anos
+	2	10 a 19 anos
+	3	20 a 29 anos
+	.	
+	.
+	.
+	x	90 anos ou mais
+
+
+DataDeNotificações
+	Id	Data De Notificação
+	1	18/07/2021
+	2	19/07/2021
+
+
+Notificações
+	Id	DataDeNotificaçãoId	PrimeirosSintoma	Faixa_EtariaId	RaçaId	SexoId TesteId	CentroDeSaudeId	BairroId
+	1	1			18/07/2021		3		2	1	2	1
+	2	2			16/07/2021		1		1	1	1	1
+
+Sintomas
+	Id	NotificaçõesId	Sintoms....
+	1	1		Tosse, Coriza...
+	2	2		Tosse, Coriza, Febre...
+
+Status Da Notificação
+	Id	NotificçõesId	Status...

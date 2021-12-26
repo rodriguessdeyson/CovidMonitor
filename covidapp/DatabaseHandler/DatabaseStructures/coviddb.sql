@@ -1,0 +1,230 @@
+CREATE SCHEMA IF NOT EXISTS COVIDApp DEFAULT CHARACTER SET utf8mb4;
+USE COVIDApp;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.States (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(50) NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Name_UNIQUE (Name ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.Cities (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(50) NOT NULL,
+  State_Id INT NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Name_UNIQUE (Name ASC) VISIBLE,
+  INDEX FK_City_State_idx (State_Id ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
+  CONSTRAINT FK_City_State
+    FOREIGN KEY (State_Id)
+    REFERENCES COVIDApp.States (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.Neighborhoods (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(50) NOT NULL,
+  City_Id INT NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Name_UNIQUE (Name ASC) VISIBLE,
+  INDEX FK_Neighborhood_City_idx (City_Id ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
+  CONSTRAINT FK_Neighborhood_City
+    FOREIGN KEY (City_Id)
+    REFERENCES COVIDApp.Cities (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.HealthFacilities (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(50) NOT NULL,
+  Neighborhood_Id INT NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Name_UNIQUE (Name ASC) VISIBLE,
+  INDEX FK_HealthFacility_Neighborhood_idx (Neighborhood_Id ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
+  CONSTRAINT FK_HealthFacility_Neighborhood
+    FOREIGN KEY (Neighborhood_Id)
+    REFERENCES COVIDApp.Neighborhoods (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.COVIDTests (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(45) NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Name_UNIQUE (Name ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.Gender (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Gender ENUM('F', 'M') NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Gender_UNIQUE (Gender ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.Race (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Race ENUM('Branca', 'Preta', 'Parda', 'Amarela', 'Indígena') NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Race_UNIQUE (Race ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.AgeRange (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Age ENUM('Até 9 anos', '10 a 19 anos', '20 a 29 anos', '30 a 39 anos', '40 a 49 anos', '50 a 59 anos', '60 a 69 anos', '70 a 79 anos', '80 a 89 anos', '90 anos ou mais') NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Age_UNIQUE (Age ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.NotificationOpenningDates (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Date DATE NOT NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Date_UNIQUE (Date ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.Notifications (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Gender_Id INT NOT NULL,
+  AgeRange_Id INT NOT NULL,
+  Race_Id INT NOT NULL,
+  HealthFacility_Id INT NOT NULL,
+  Neighborhood_Id INT NOT NULL,
+  PRIMARY KEY (Id, Gender_Id, AgeRange_Id, Race_Id, HealthFacility_Id, Neighborhood_Id),
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
+  INDEX FK_Notification_Gender_idx (Gender_Id ASC) VISIBLE,
+  INDEX FK_Notification_AgeRange_idx (AgeRange_Id ASC) VISIBLE,
+  INDEX FK_Notification_Race_idx (Race_Id ASC) VISIBLE,
+  INDEX FK_Notification_HealthFacility_idx (HealthFacility_Id ASC) VISIBLE,
+  INDEX FK_Notification_Neighborhood_idx (Neighborhood_Id ASC) VISIBLE,
+  CONSTRAINT FK_Notification_Gender
+    FOREIGN KEY (Gender_Id)
+    REFERENCES COVIDApp.Gender (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT FK_Notification_AgeRange
+    FOREIGN KEY (AgeRange_Id)
+    REFERENCES COVIDApp.AgeRange (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT FK_Notification_Race
+    FOREIGN KEY (Race_Id)
+    REFERENCES COVIDApp.Race (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT FK_Notification_HealthFacility
+    FOREIGN KEY (HealthFacility_Id)
+    REFERENCES COVIDApp.HealthFacilities (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT FK_Notification_Neighborhood
+    FOREIGN KEY (Neighborhood_Id)
+    REFERENCES COVIDApp.Neighborhoods (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.Symptoms (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Notification_Id INT NOT NULL,
+  SoreThroat TINYINT NOT NULL,
+  Dyspnea TINYINT NOT NULL,
+  Fever TINYINT NOT NULL,
+  Cough TINYINT NOT NULL,
+  Others VARCHAR(50) NULL,
+  PRIMARY KEY (Id, Notification_Id),
+  INDEX FK_Symptom_Notification_idx (Notification_Id ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
+  CONSTRAINT FK_Symptom_Notification
+    FOREIGN KEY (Notification_Id)
+    REFERENCES COVIDApp.Notifications (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.NotificationClosingDates (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Date DATE NULL,
+  PRIMARY KEY (Id),
+  UNIQUE INDEX Date_UNIQUE (Date ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.NotificationsStatus (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Notification_Id INT NOT NULL,
+  COVIDTest_Id INT NOT NULL,
+  NotificationOpenningDate_Id INT NOT NULL,
+  NotificationClosingDate_Id INT NULL,
+  FirstSymptomDate DATE NULL,
+  COVIDTestDate DATE NULL,
+  DeathDate DATE NULL,
+  Requested TINYINT NOT NULL,
+  Collected TINYINT NOT NULL,
+  Concluded TINYINT NOT NULL,
+  Canceled TINYINT NOT NULL,
+  Ignored TINYINT NOT NULL,
+  Death TINYINT NOT NULL,
+  Healed TINYINT NOT NULL,
+  Hospitalized TINYINT NOT NULL,
+  ICU TINYINT NOT NULL,
+  RecoverAtHome TINYINT NOT NULL,
+  FinalClassification ENUM('DESCARTADO', 'CONFIRMAÇÃO LABORATORIAL', 'NÃO INFORMADO', 'CONFIRMACAO CLINICO-EPIDEMIOLOGICO') NULL,
+  PRIMARY KEY (Id, Notification_Id),
+  INDEX FK_NotificationStatus_Notification_idx (Notification_Id ASC) VISIBLE,
+  INDEX FK_NotificationStatus_COVIDTest_idx (COVIDTest_Id ASC) VISIBLE,
+  INDEX FK_NotificationStatus_NotificationOpenningDate_idx (NotificationOpenningDate_Id ASC) VISIBLE,
+  INDEX FK_NotificationStatus_NotificationClosingDate_idx (NotificationClosingDate_Id ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
+  CONSTRAINT FK_NotificationStatus_Notification
+    FOREIGN KEY (Notification_Id)
+    REFERENCES COVIDApp.Notifications (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT FK_NotificationStatus_COVIDTest
+    FOREIGN KEY (COVIDTest_Id)
+    REFERENCES COVIDApp.COVIDTests (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT FK_NotificationStatus_NotificationOpenningDate
+    FOREIGN KEY (NotificationOpenningDate_Id)
+    REFERENCES COVIDApp.NotificationOpenningDates (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT FK_NotificationStatus_NotificationClosingDate
+    FOREIGN KEY (NotificationClosingDate_Id)
+    REFERENCES COVIDApp.NotificationClosingDates (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS COVIDApp.ClinicalInformations (
+  Id INT NOT NULL AUTO_INCREMENT,
+  Notification_Id INT NOT NULL,
+  LungDiseases TINYINT NOT NULL DEFAULT 0,
+  HeartDiseases TINYINT NOT NULL DEFAULT 0,
+  Diabetes TINYINT NOT NULL DEFAULT 0,
+  KidneyDisease TINYINT NOT NULL DEFAULT 0,
+  Immunosuppression TINYINT NOT NULL DEFAULT 0,
+  HighRiskPregnancy TINYINT NOT NULL DEFAULT 0,
+  ChromosomalDisorders TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (Id, Notification_Id),
+  INDEX FK_ClinicalInformation_Notification_idx (Notification_Id ASC) VISIBLE,
+  UNIQUE INDEX Id_UNIQUE (Id ASC) VISIBLE,
+  CONSTRAINT FK_ClinicalInformation_Notification
+    FOREIGN KEY (Notification_Id)
+    REFERENCES COVIDApp.Notifications (Id)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
